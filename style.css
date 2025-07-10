@@ -7,14 +7,21 @@ body {
 }
 
 h1 {
+  margin-bottom: 0.5rem;
+}
+
+#timer {
+  font-size: 1.2rem;
   margin-bottom: 1rem;
+  color: #333;
 }
 
 .game-board {
   display: grid;
-  grid-template-columns: repeat(4, 100px);
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   gap: 1rem;
   justify-content: center;
+  max-width: 400px;
   margin: 1rem auto;
 }
 
@@ -46,4 +53,14 @@ button {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.win-animation {
+  animation: pop 0.5s ease-in-out 3;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }

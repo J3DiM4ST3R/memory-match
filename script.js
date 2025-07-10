@@ -1,10 +1,14 @@
 const board = document.getElementById('game-board');
 const resetBtn = document.getElementById('reset-btn');
+const timerDisplay = document.getElementById('time');
 
 const symbols = ['🍎', '🍌', '🍇', '🍓', '🍊', '🍉', '🥝', '🍍'];
 let cards = [];
 let flippedCards = [];
 let lockBoard = false;
+let timeLeft = 60;
+let timer;
+let gameOver = false;
 
 function createBoard() {
   const doubledSymbols = [...symbols, ...symbols]; // Create pairs
@@ -12,6 +16,12 @@ function createBoard() {
 
   board.innerHTML = '';
   flippedCards = [];
+  lockBoard = false;
+  gameOver = false;
+  timeLeft = 60;
+  timerDisplay.textContent = timeLeft;
+  clearInterval(timer);
+  timer = setInterval(updateTimer, 1000);
 
   shuffled.forEach((symbol, index) => {
     const card = document.createElement('div');
@@ -26,6 +36,8 @@ function createBoard() {
 }
 
 function handleFlip(e) {
+  if (gameOver) return;
+
   const card = e.target;
   if (lockBoard || card.classList.contains('flipped')) return;
 
@@ -43,7 +55,10 @@ function handleFlip(e) {
       // Check for win
       const allFlipped = document.querySelectorAll('.card.flipped').length;
       if (allFlipped === symbols.length * 2) {
+        clearInterval(timer);
+        document.body.classList.add('win-animation');
         setTimeout(() => alert("🎉 You won!"), 300);
+        gameOver = true;
       }
     } else {
       setTimeout(() => {
@@ -53,6 +68,17 @@ function handleFlip(e) {
         lockBoard = false;
       }, 800);
     }
+  }
+}
+
+function updateTimer() {
+  timeLeft--;
+  timerDisplay.textContent = timeLeft;
+  if (timeLeft <= 0) {
+    clearInterval(timer);
+    lockBoard = true;
+    gameOver = true;
+    alert("⏰ Time's up! Try again.");
   }
 }
 
